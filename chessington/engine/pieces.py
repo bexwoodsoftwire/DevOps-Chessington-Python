@@ -13,6 +13,7 @@ class Piece(ABC):
 
     def __init__(self, player: Player):
         self.player = player
+        self.hasMoved = False
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -33,6 +34,7 @@ class Piece(ABC):
         """
         current_square = board.find_piece(self)
         board.move_piece(current_square, new_square)
+        self.hasMoved = True
 
 
 class Pawn(Piece):
@@ -41,12 +43,15 @@ class Pawn(Piece):
     """
     def get_available_moves(self, board) -> List[Square]:
         current_square = board.find_piece(self)
+        initial_move = self.hasMoved == False
         if self.player == Player.BLACK:
             square_in_front = Square.at(current_square.row - 1, current_square.col)
-            return [square_in_front]
+            square_two_in_front = Square.at(current_square.row - 2, current_square.col)
         else:
             square_in_front = Square.at(current_square.row + 1, current_square.col)
-            return [square_in_front]
+            square_two_in_front = Square.at(current_square.row + 2, current_square.col)
+        
+        return [square_in_front, square_two_in_front] if initial_move else [square_in_front]
 
 
 class Knight(Piece):
