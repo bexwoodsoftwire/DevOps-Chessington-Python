@@ -49,9 +49,12 @@ class Pawn(Piece):
             square_two_in_front = Square.at(current_square.row - 2, current_square.col)
         else:
             square_in_front = Square.at(current_square.row + 1, current_square.col)
-            square_two_in_front = Square.at(current_square.row + 2, current_square.col)
+            square_two_in_front = Square.at(current_square.row + 2, current_square.col)    
         
-        return [square_in_front, square_two_in_front] if initial_move else [square_in_front]
+        possible_moves = [square_in_front, square_two_in_front] if initial_move else [square_in_front]
+        available_moves = list(filter(lambda square: board.get_piece(square) == None, possible_moves))
+
+        return [] if square_in_front not in available_moves else available_moves
 
 
 class Knight(Piece):
